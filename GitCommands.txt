@@ -1,0 +1,188 @@
+GIT :
+
+    Git is a version control sys.we integrate developers with our code ,to share and update the code.
+    and 	
+     
+	 working dir : developed the code
+	 staging area :
+	 local repo:
+	 
+1.git init : It initialized empty git repo.
+2.git add . : it add the code to staging area.
+
+ 3.git diff <Test.txt>
+  to see the diff in file content b/w working dir and staging area 
+   to see the update code in working dir and staging area but not updated to the staging area
+
+diff --git a/Test.txt b/Test.txt
+index d5a94a3..aa8918f 100644
+--- a/Test.txt
++++ b/Test.txt
+@@ -1 +1,15 @@
+-Animals
+\ No newline at end of file
++Animals
++dog
++cat
++
++
++git init
+---------------
+      a/Test.txt is a source(staging area)
+	  b/Test.txt is a dest.(working dir)    reverse...
+d5a94a3..aa8918f 100644	 
+	  d5a94a3 - Hash of the source(stage)
+	  aa8918f - ''  '' '''  desti(working dir)
+	  100644 - git file mode
+	 
+	 --- a/Test.txt =  source file missing some lines(----)
+	 +++ b/Test.txt = new lines added in the working dir.
+	
+ if any line prefix with space means it is unchanged
+if any line '' '' '' ''   + means it is added in the destination copy
+ '' '' '' ''' ''' '' ''   -  means it is removed from dest.copy  
+-----------------------------------------------------------------------	 
+ 
+ 4. git commit -m < msg > 
+      stage area code will one copy to the local repo.
+	
+ 5. To see the diff.b/w in file content b/w working dir and last commit.
+Last commit referd using HEAD in local repo.
+                                                git diff HEAD Test.txt 
+  
+6. To see the diff.b/w staging and Local Repo
+ 
+                                   git diff --staged HEAD Test.txt 
+								   
+7.To see the diff b/w the last commit(HEAD) and specific commit	
+   
+ specific commits have multiples are there but how can we identify ? By using Hash id we can provide specific ID
+
+   git log --oneline  = > it will give how many commits added in list format.
+
+git diff 87bbecc(commit id) Test.txt
+        it will give the first commited file(local repo) compare working dir files(working dir)
+
+8.	To see the diff b/w the specific commit and staging area 
+  
+   git diff --staged 87bbecc 
+
+-------------------------------------------------------------------------------------
+
+9. git checkout command : To discard unstaged changes in the tracked files of working dir.
+  git checkout -- Test.txt (it is only tracked files)
+
+-----------------------------------------------------------------------------------------
+  
+10.ls 
+   to show the all content in list format in working dir.
+git ls-files : to show all added files in  the staged area   
+
+11  Remove from staging area/working dir/
+ 
+  git rm <Test3.txt>
+  
+  git rm . -> it will remove from both staging/work.dir
+  
+  git rm --cached ->it will remove only staging area not from working dir
+  
+  rm <Test3.txt> -> remove only working dor.
+_____________________________________________________________________________________
+  
+  12.Reset : To remove changes from staging area,  (opposite to add command)
+  
+  git reset <test.txt>
+  
+ 13.to undo commits at repo.level
+  
+ git reset <mode> <commit id>
+
+ a) --mixed : 
+        mode will decide wheather these changes are going to remove from stage area and working dir or not. 
+    --mixed : discard the most recent commit in the local repo and discard changes in staging area we should use 
+  reset with -- mixed option, it is the default mode. it will not touch working dir.
+  
+      5,4,3,2,1 -< if we give commit id 3 it will remove above 3 (4,5) files deleted.
+	  
+b) soft :  remove from only local repo.
+  It is same working as a --mixed option,but changes are available in working dir as well as in staging area.
+  It won't touch staging area and working dir.
+  As changes already present in stging area,just we have to use commit to revert back.
+  
+c)Hard : changes will afected eveywhere(local/stage/working dir)
+           it is impossible to revert back and hence while using hard reset we have to take special care.
+   
+	  
+
+--------------------------------------------------------------------------------------
+14.Branching : 
+
+   By default 1st commit Master branch will created and commits will go to the master branch,it is a main branch.
+
+   c1------c2 ------- c3---------------------------------
+
+      feature1        '''' ------ c1 ------ c2 ----- c3 ------
+      feature2        ' ' ' ------ c1 ------ c2 ----- c3 --------
+
+without disturbing the main branch we crate the feature1,2 branch and develop the code by dev1 and dev2	after developing the code dev can push it into main branch
+ or 
+ 
+ 
+ 
+ 
+ git branch -> currently avaliable branch 
+   *master -> it indicates active branch master branch is deffault branch.
+   
+ To create new branch -> git branch <branch name > br1
+switch to particular branch -> git checkout br1
+switch & create -> git checkout -b  < br2 >  
+
+_____________________________________________________________________________________
+
+15.Merging : 
+  2 types 1.Fast-forward-merge , 2. 3-way merge.
+  
+ 1. : It is a linear merge. 
+       In this we develop only features,we do nit touch the master branch finally we merge the code into  master branch.
+      There is no conflicts in this state. 
+	  
+	  Master ----> a.txt , b.txt
+	  feature ---> x.txt,y.txt
+	  
+	I we want merge the feature branch files into Master branch 1st we will checkout the master branch   
+
+ git merge <feature	>
+	  
+ 2 : It is a non-linear merge.
+ we r doing added commits in the master branch parallelly child branch.
+    In this may/may not got conflicts.In this time Git will creat Merge commit(latest commit). 
+	
+	Master - 2 files,2 commits
+	Feature - 4 files,4 commits.
+	
+	after add 1 more file Master -> 3files,3 commits
+	
+	 Merge branch 'feature' it is created by the Git.
+	 
+Resolve merge conflicts :
+----------------------------
+
+      Auto-merging a.txt
+CONFLICT (content): Merge conflict in a.txt
+Automatic merge failed; fix conflicts and then commit the result.
+
+
+  c1 - c2 - c3  -- 
+     f1 -------     Conflict got above message : 
+	 
+To delete branch -> git branch -d <feature>
+
+_____________________________________________________________________________________
+
+16.Git Rebase : In this we didn't get any conflicts.We use only local meachine.
+ 
+     step1: Add Feature branch on top of Master .1st checkout to feature branch then
+	     
+		  git rebase master
+	 
+	 step2 : Merge them into master branch.
